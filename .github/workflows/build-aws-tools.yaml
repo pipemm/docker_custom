@@ -4,8 +4,6 @@ on:
   push:
     branches:
       - aws-tools
-    paths:
-      - Dockerfile
 
 jobs:
   build:
