@@ -6,6 +6,7 @@ on:
       - aws-tools
     paths:
       - Dockerfile
+
 jobs:
   build:
     runs-on: ubuntu-22.04
