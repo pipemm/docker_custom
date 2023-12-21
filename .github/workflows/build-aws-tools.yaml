@@ -2,8 +2,10 @@ name: Build Docker Image
 
 on:
   push:
-    branches:
-      - aws-tools
+    branches-ignore:
+      - main
+    paths:
+      - Dockerfile
 
 jobs:
   build:
