@@ -1,0 +1,22 @@
+name: Build and Push Docker Image
+
+on:
+  push:
+    branches:
+      - aws-tools
+    paths:
+      - Dockerfile
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        
+      - name: Text
+        env:
+          repository: "aws-tools"
+          tag: "latest"
+        run: |
+          echo test
