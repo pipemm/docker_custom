@@ -24,6 +24,9 @@ jobs:
       - name: Merge Main to Other Branches
         run: |
           git branch --format='%(refname:short)' --no-column --all
+          git config user.name
+          git config user.email
+          git config user.name 'Github Action Runner'
           git branch --format='%(refname:short)' --no-column --all |
           while read -r branch
           do
