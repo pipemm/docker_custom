@@ -18,12 +18,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 1
 
       - name: Merge Main to Other Branches
         run: |
-          git branch --format='%(refname:short)' --no-column
+          git branch --format='%(refname:short)' --no-column --all
           git branch --format='%(refname:short)' --no-column |
           while read -r branch
           do
