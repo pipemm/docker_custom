@@ -5,7 +5,6 @@ name: Testing
 # Controls when the workflow will run
 on:
   push:
-    branches-ignore: [ "aws-tools" ]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
