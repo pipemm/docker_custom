@@ -8,14 +8,14 @@ on:
       - Dockerfile
 
 jobs:
-  build:
+  Test:
     runs-on: ubuntu-22.04
     
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         
-      - name: Text
+      - name: Test
         env:
           repository: "aws-tools"
           tag: "latest"
