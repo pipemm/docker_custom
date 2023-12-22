@@ -1,0 +1,33 @@
+name: Distribute Github Workflows to Other Branches
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/*.yaml
+      
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  merge:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Merge Main to Other Branches
+        run: |
+          git branch --format='%(refname:short)' --no-column |
+          while read -r branch
+          do
+            if [ "${branch}" != "main" ]
+            then
+              git checkout "${branch}"
+              git merge main --no-edit
+              git push origin "${branch}"
+            fi
+          done
