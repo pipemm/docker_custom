@@ -23,10 +23,10 @@ jobs:
 
       - name: Merge Main to Other Branches
         run: |
-          git branch --format='%(refname:short)' --no-column --all
           git config user.name
           git config user.email
-          git config user.name 'Github Action Runner'
+          ecgi settings
+          git config user.name "Github Action Runner"
           git config user.name
 
       - name: Test
