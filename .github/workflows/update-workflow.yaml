@@ -21,6 +21,7 @@ jobs:
 
       - name: Merge Main to Other Branches
         run: |
+          git branch --format='%(refname:short)' --no-column
           git branch --format='%(refname:short)' --no-column |
           while read -r branch
           do
