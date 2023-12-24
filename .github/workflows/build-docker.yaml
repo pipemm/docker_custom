@@ -62,4 +62,5 @@ jobs:
       - name: Clean
         run: |
           docker logout
+          docker images --format '{{.Tag}}' "${LOCAL_IMAGE}"
           docker rmi --force "${LOCAL_IMAGE}"
