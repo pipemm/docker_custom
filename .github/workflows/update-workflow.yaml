@@ -24,9 +24,7 @@ jobs:
 
       - name: Merge Main to Other Branches
         run: |
-          echo git config --global user.name
           git config --global user.name 'Github Action'
-          echo git config --global user.email
           git config --global user.email '244682510@qq.com'
 
       - name: Test
@@ -36,11 +34,8 @@ jobs:
           do
             if [ "${branch}" != "main" ]
             then
-              echo git checkout "${branch}"
               git checkout "${branch}"
-              echo git merge main --no-edit
               git merge main --no-edit
-              echo git push origin "${branch}"
               git push origin "${branch}"
             fi
           done
