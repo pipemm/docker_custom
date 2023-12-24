@@ -35,7 +35,9 @@ jobs:
             then
               echo git checkout "${branch}"
               git checkout "${branch}"
+              echo git merge main --no-edit
               git merge main --no-edit
-              ##git push origin "${branch}"
+              echo git push origin "${branch}"
+              git push origin "${branch}"
             fi
           done
