@@ -12,6 +12,9 @@ on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
+env:
+  LOCAL_IMAGE: 'local-image:latest'
+
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   process:
@@ -26,8 +29,7 @@ jobs:
         
       - name: Build Docker Image
         run: |
-          docker build --tag local-image:latest .
-          echo Hello
+          docker build --no-cache --tag "${LOCAL_IMAGE}" --file 'Dockerfile' .
         
       - name: Publish
         env:
@@ -38,7 +40,11 @@ jobs:
           REPOSITORY_NAME="${BRANCH}"
           TAG_NAME='latest'
           IMAGE_NAME="${NAMESPACE}/${REPOSITORY_NAME}:${TAG_NAME}"
-          docker tag local-image:latest ${IMAGE_NAME}
+          docker tag "${LOCAL_IMAGE}" ${IMAGE_NAME}
           USERNAME="${NAMESPACE##*/}"
           echo "${PASSWORD}" | docker login --username "${USERNAME}" --password-stdin
           docker push "${IMAGE_NAME}"
+      
+      - name: Clean
+        run: |
+          docker image rm "${LOCAL_IMAGE}"
