@@ -1,5 +1,5 @@
 
-name: Testing
+name: Build and Publish Image
 
 # Controls when the workflow will run
 on:
@@ -14,7 +14,7 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  test:
+  process:
     # The type of runner that the job will run on
     runs-on: ubuntu-22.04
 
@@ -25,16 +25,10 @@ jobs:
         uses: actions/checkout@v4
         
       - name: Build Docker Image
-        env:
-          NAMESPACE: ${{ secrets.DOCKER_NAMESPACE }}
         run: |
-          BRANCH="${GITHUB_REF##*/}"
-          REPOSITORY_NAME="${BRANCH}"
-          TAG_NAME='latest'
-          IMAGE_NAME="${NAMESPACE}/${REPOSITORY_NAME}:TAG_NAME"
-          docker build --tag "${IMAGE_NAME}" .
+          docker build --tag local-image:latest .
+          echo Hello
         
-      # Runs a set of commands using the runners shell
       - name: Publish
         env:
           NAMESPACE: ${{ secrets.DOCKER_NAMESPACE }}
@@ -43,7 +37,8 @@ jobs:
           BRANCH="${GITHUB_REF##*/}"
           REPOSITORY_NAME="${BRANCH}"
           TAG_NAME='latest'
-          IMAGE_NAME="${NAMESPACE}/${REPOSITORY_NAME}:TAG_NAME"
+          IMAGE_NAME="${NAMESPACE}/${REPOSITORY_NAME}:${TAG_NAME}"
+          docker tag local-image:latest ${IMAGE_NAME}
           USERNAME="${NAMESPACE##*/}"
           echo "${PASSWORD}" | docker login --username "${USERNAME}" --password-stdin
           docker push "${IMAGE_NAME}"
