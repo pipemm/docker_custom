@@ -19,6 +19,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
+          fetch-depth: 0
           token: ${{ secrets.GH_DOCKER_MAKER }}
 
       - name: Merge Main to Other Branches
@@ -42,7 +43,7 @@ jobs:
                 do
                   if [ "${branch}" != 'main' ]
                   then
-                    git fetch "${remote}" "${branch}:${branch}"
+                    ##git fetch "${remote}" "${branch}:${branch}"
                     echo git checkout "${branch}"
                     git checkout "${branch}"
                     git merge main --no-edit
