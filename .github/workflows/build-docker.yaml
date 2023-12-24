@@ -37,6 +37,7 @@ jobs:
         run: |
           if [ -d "${FOLDER_TEST}" ]
           then
+            echo "${FOLDER_TEST}"
             ls "${FOLDER_TEST%/}/*.sh"
           fi
       
