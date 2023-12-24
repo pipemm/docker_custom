@@ -38,9 +38,12 @@ jobs:
       - name: Publish
         env:
           NAMESPACE: ${{ secrets.DOCKER_NAMESPACE }}
+          PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
         run: |
           BRANCH="${GITHUB_REF##*/}"
           REPOSITORY_NAME="${BRANCH}"
           TAG_NAME='latest'
           IMAGE_NAME="${NAMESPACE}/${REPOSITORY_NAME}:TAG_NAME"
+          USERNAME="${NAMESPACE##*/}"
+          echo "${PASSWORD}" | docker login --username "${USERNAME}" --password-stdin
           docker push "${IMAGE_NAME}"
