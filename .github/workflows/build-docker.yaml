@@ -39,4 +39,8 @@ jobs:
         env:
           NAMESPACE: ${{ secrets.DOCKER_NAMESPACE }}
         run: |
+          BRANCH="${GITHUB_REF##*/}"
+          REPOSITORY_NAME="${BRANCH}"
+          TAG_NAME='latest'
+          IMAGE_NAME="${NAMESPACE}/${REPOSITORY_NAME}:TAG_NAME"
           docker push "${IMAGE_NAME}"
