@@ -25,9 +25,9 @@ jobs:
       - name: Merge Main to Other Branches
         run: |
           echo git config --global user.name
-          git config --global user.name Action
+          git config --global user.name 'Github Action'
           echo git config --global user.email
-          git config --global user.email
+          git config --global user.email '244682510@qq.com'
 
       - name: Test
         run: |
