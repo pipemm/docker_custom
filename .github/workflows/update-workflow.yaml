@@ -31,18 +31,16 @@ jobs:
             --header 'Accept: application/vnd.github+json' \
             --header 'X-GitHub-Api-Version: 2022-11-28' \
             "${URL_API}" |\
-            jq --raw-output '.[].name'
-
-          git branch --format='%(refname:short)' --no-column --all |
-          while read -r branch
-          do
-            if [ "${branch}" != "main" ]
-            then
-              echo git checkout "${branch}"
-              git checkout "${branch}"
-              git merge main --no-edit
-              git status
-              echo git push origin "${branch}"
-              git push origin "${branch}"
-            fi
-          done
+            jq --raw-output '.[].name' |
+            while read -r branch
+            do
+              if [ "${branch}" != 'main' ]
+              then
+                echo git checkout "${branch}"
+                git checkout "${branch}"
+                git merge main --no-edit
+                git status
+                echo git push origin "${branch}"
+                git push origin "${branch}"
+              fi
+            done
