@@ -24,7 +24,10 @@ jobs:
 
       - name: Merge Main to Other Branches
         run: |
-          echo settings
+          echo git config --global user.name
+          git config --global user.name
+          echo git config --global user.email
+          git config --global user.email
 
       - name: Test
         run: |
