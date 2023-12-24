@@ -38,7 +38,7 @@ jobs:
           if [ -d "${FOLDER_TEST}" ]
           then
             echo "${FOLDER_TEST}"
-            ls "${FOLDER_TEST%/}/*.sh"
+            ls ${FOLDER_TEST%/}/*.sh
           fi
       
       - name: Publish
