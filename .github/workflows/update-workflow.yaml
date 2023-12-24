@@ -34,7 +34,7 @@ jobs:
             "${URL_API}" |\
             jq --raw-output '.[].name' > "${FILE_BRANCH}"
           git remote |
-            while read -r remote |
+            while read -r remote
             do 
               cat "${FILE_BRANCH}" |
                 while read -r branch
