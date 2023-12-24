@@ -11,9 +11,15 @@ on:
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
+    inputs:
+      tag_name:
+        description: 'tag name'
+        required: false
+        default: 'latest'
 
 env:
   LOCAL_IMAGE: 'local-image:latest'
+  TAG_NAME: ${{ github.event.inputs.tag_name || 'latest' }}
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -52,7 +58,6 @@ jobs:
         run: |
           BRANCH="${GITHUB_REF##*/}"
           REPOSITORY_NAME="${BRANCH}"
-          TAG_NAME='latest'
           IMAGE_NAME="${NAMESPACE}/${REPOSITORY_NAME}:${TAG_NAME}"
           docker tag "${LOCAL_IMAGE}" ${IMAGE_NAME}
           USERNAME="${NAMESPACE##*/}"
@@ -62,5 +67,5 @@ jobs:
       - name: Clean
         run: |
           docker logout
-          docker images --format '{{.Tag}}' "${LOCAL_IMAGE}"
+          docker images --format '{{.Repository}}:{{.Tag}}' "${LOCAL_IMAGE}"
           docker rmi --force "${LOCAL_IMAGE}"
