@@ -33,7 +33,7 @@ jobs:
       
       - name: Test
         env:
-          FOLDER_TEST='Test/'
+          FOLDER_TEST: 'Test/'
         run: |
           if [ -d "${FOLDER_TEST}" ]
           then
