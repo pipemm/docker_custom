@@ -19,12 +19,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
+          token: ${{ secrets.GH_DOCKER_MAKER }}
           fetch-depth: 0
 
       - name: Merge Main to Other Branches
         run: |
-          git config user.name
-          git config user.email
           echo settings
 
       - name: Test
