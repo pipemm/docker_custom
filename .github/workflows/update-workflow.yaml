@@ -25,7 +25,8 @@ jobs:
         run: |
           git config --global user.name 'Github Action'
           git config --global user.email '244682510@qq.com'
-          git branch --format='%(refname:short)' --no-column --remotes
+          echo "${GITHUB_REPOSITORY}"
+          echo "${{ env.GITHUB_REPOSITORY }}"
           git branch --format='%(refname:short)' --no-column --all |
           while read -r branch
           do
