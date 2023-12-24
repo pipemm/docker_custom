@@ -30,7 +30,16 @@ jobs:
       - name: Build Docker Image
         run: |
           docker build --no-cache --tag "${LOCAL_IMAGE}" --file 'Dockerfile' .
-        
+      
+      - name: Test
+        env:
+          FOLDER_TEST='Test/'
+        run: |
+          if [ -d "${FOLDER_TEST}" ]
+          then
+            ls "${FOLDER_TEST%/}/*.sh"
+          fi
+      
       - name: Publish
         env:
           NAMESPACE: ${{ secrets.DOCKER_NAMESPACE }}
