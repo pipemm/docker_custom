@@ -20,12 +20,12 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          token: ${{ secrets.GH_DOCKER_MAKER }}
+          ##token: ${{ secrets.GH_DOCKER_MAKER }}
 
       - name: Merge Main to Other Branches
         run: |
-          git config --global user.name 'Github Action'
-          git config --global user.email '244682510@qq.com'
+          git config --local user.name 'Github Action'
+          git config --local user.email '244682510@qq.com'
           FILE_BRANCH='branch.txt'
           URL_API="https://api.github.com/repos/${GITHUB_REPOSITORY}/branches"
           ## [Use the REST API to get branches](https://docs.github.com/en/rest/branches/branches)
@@ -33,23 +33,14 @@ jobs:
             --header 'Accept: application/vnd.github+json' \
             --header 'X-GitHub-Api-Version: 2022-11-28' \
             "${URL_API}" |\
-            jq --raw-output '.[].name' > "${FILE_BRANCH}"
-          git remote get-url origin
-          git remote |
-            while read -r remote
-            do 
-              cat "${FILE_BRANCH}" |
-                while read -r branch
-                do
-                  if [ "${branch}" != 'main' ]
-                  then
-                    ##git fetch "${remote}" "${branch}:${branch}"
-                    echo git checkout "${branch}"
-                    git checkout "${branch}"
-                    git merge main --no-edit
-                    git status
-                    echo git push "${remote}" "${branch}"
-                    git push "${remote}" "${branch}"
-                  fi
-                done
-            done
+            jq --raw-output '.[].name' |
+            while read -r branch
+              do
+                if [ "${branch}" != 'main' ]
+                then
+                  echo git checkout "${branch}"
+                  git checkout "${branch}"
+                  git merge main --no-edit
+                  git push origin "${branch}"
+                fi
+              done
