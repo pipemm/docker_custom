@@ -61,4 +61,5 @@ jobs:
       
       - name: Clean
         run: |
-          docker image rm "${LOCAL_IMAGE}"
+          docker logout
+          docker rmi --force "${LOCAL_IMAGE}"
