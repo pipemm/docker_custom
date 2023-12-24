@@ -3,9 +3,9 @@ name: Distribute Github Workflows to Other Branches
 on:
   push:
     branches:
-      - main
+      - 'main'
     paths:
-      - .github/workflows/*.{yml,yaml}
+      - '.github/workflows/*.{yml,yaml}'
       
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
