@@ -1,5 +1,5 @@
 
-name: Retag Image
+name: Re-tag Image
 
 # Controls when the workflow will run
 on:
@@ -33,6 +33,7 @@ jobs:
       - name: Pull and Test
         env:
           FOLDER_TEST : 'Test/'
+          NAMESPACE: ${{ secrets.DOCKER_NAMESPACE }}
         run: |
           BRANCH="${GITHUB_REF##*/}"
           REPOSITORY_NAME="${BRANCH}"
