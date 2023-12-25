@@ -1,4 +1,4 @@
 
 
-docker run "${LOCAL_IMAGE}" 'pwd'
+docker run "${TEST_IMAGE}" 'pwd'
 
