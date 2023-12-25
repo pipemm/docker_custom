@@ -81,4 +81,4 @@ jobs:
           REPOSITORY_NAME="${BRANCH}"
           IMAGE_NAME="${NAMESPACE}/${REPOSITORY_NAME}:${TAG_NAME}"
           docker rmi --force "${LOCAL_IMAGE}"
-          docker rmi "${IMAGE_NAME}"
+          docker rmi --force "${IMAGE_NAME}"
