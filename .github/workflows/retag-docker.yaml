@@ -1,31 +1,25 @@
 
-name: Build Image
-
-# Controls when the workflow will run
-on:
-  push:
-    branches-ignore:
-      - main
-    paths:
-      - Dockerfile
+name: Re-tag Image
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
     inputs:
-      tag_name:
-        description: 'Tag Name'
-        required: false
+      tag_from:
+        description: 'Tag From'
+        required: true
         default: 'latest'
+      tag_to:
+        description: 'Tag To'
+        required: true
+        default: 'test'
 
 env:
-  LOCAL_NAME  : 'local-image'
-  LOCAL_SHA   :  ${{ github.sha }}
-  LOCAL_IMAGE : "${LOCAL_NAME}:${LOCAL_SHA}"
-  #####
-  TAG_NAME        :  ${{ github.event.inputs.tag_name || 'latest' }}
   BRANCH          : "${GITHUB_REF##*/}"
   REPOSITORY_NAME : "${BRANCH}"
-  IMAGE_NAME      : "${NAMESPACE}/${REPOSITORY_NAME}:${TAG_NAME}"
+  TAG_FROM        :  ${{ github.event.inputs.tag_from }}
+  IMAGE_FROM      : "${NAMESPACE}/${REPOSITORY_NAME}:${TAG_FROM}"
+  TAG_TO          :  ${{ github.event.inputs.tag_to }}
+  IMAGE_TO        : "${NAMESPACE}/${REPOSITORY_NAME}:${TAG_TO}"
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -35,18 +29,15 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: Checkout
         uses: actions/checkout@v4
-        
-      - name: Build Docker Image
-        run: |
-          docker build --no-cache --tag "${LOCAL_IMAGE}" --file 'Dockerfile' .
       
-      - name: Test
+      - name: Pull and Test
         env:
-          FOLDER_TEST: 'Test/'
+          FOLDER_TEST : 'Test/'
+          LOCAL_IMAGE : "${IMAGE_FROM}"
         run: |
+          docker pull "${IMAGE_FROM}"
           if [ -d "${FOLDER_TEST}" ]
           then
             ls ${FOLDER_TEST%/}/*.sh |
@@ -57,19 +48,16 @@ jobs:
               done
           fi
       
-      - name: Publish
+      - name: Tag
+        run: |
+          docker tag "${IMAGE_FROM}" ${IMAGE_TO}
+
+      - name: Push
         env:
           NAMESPACE: ${{ secrets.DOCKER_NAMESPACE }}
           PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
         run: |
-          docker tag "${LOCAL_IMAGE}" ${IMAGE_NAME}
           USERNAME="${NAMESPACE##*/}"
           echo "${PASSWORD}" | docker login --username "${USERNAME}" --password-stdin
           docker push "${IMAGE_NAME}"
-          docker logout
-      
-      - name: Clean
-        run: |
-          docker images --format '{{.Repository}}:{{.Tag}}' "${LOCAL_IMAGE}"
-          docker images --format '{{.Repository}}:{{.Tag}}'
-          docker rmi --force "${LOCAL_IMAGE}"
+          
