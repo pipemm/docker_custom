@@ -20,12 +20,7 @@ on:
 env:
   LOCAL_NAME  : 'local-image'
   LOCAL_SHA   : ${{ github.sha }}
-  LOCAL_IMAGE : ${LOCAL_NAME}:${LOCAL_SHA}
-  #####
-  TAG_NAME        : ${{ github.event.inputs.tag_name || 'latest' }}
-  BRANCH          : ${GITHUB_REF##*/}
-  REPOSITORY_NAME : ${BRANCH}
-  IMAGE_NAME      : ${NAMESPACE}/${REPOSITORY_NAME}:${TAG_NAME}
+  TAG_NAME    : ${{ github.event.inputs.tag_name || 'latest' }}
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -41,14 +36,17 @@ jobs:
         
       - name: Build Docker Image
         run: |
+          LOCAL_IMAGE="${LOCAL_NAME}:${LOCAL_SHA}"
           docker build --no-cache --tag "${LOCAL_IMAGE}" --file 'Dockerfile' .
       
       - name: Test
         env:
           FOLDER_TEST: 'Test/'
         run: |
+          LOCAL_IMAGE="${LOCAL_NAME}:${LOCAL_SHA}"
           if [ -d "${FOLDER_TEST}" ]
           then
+            export TEST_IMAGE="${LOCAL_IMAGE}"
             ls ${FOLDER_TEST%/}/*.sh |
               while read -r bfile
               do
@@ -62,6 +60,10 @@ jobs:
           NAMESPACE: ${{ secrets.DOCKER_NAMESPACE }}
           PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
         run: |
+          LOCAL_IMAGE="${LOCAL_NAME}:${LOCAL_SHA}"
+          BRANCH="${GITHUB_REF##*/}"
+          REPOSITORY_NAME="${BRANCH}"
+          IMAGE_NAME="${NAMESPACE}/${REPOSITORY_NAME}:${TAG_NAME}"
           docker tag "${LOCAL_IMAGE}" ${IMAGE_NAME}
           USERNAME="${NAMESPACE##*/}"
           echo "${PASSWORD}" | docker login --username "${USERNAME}" --password-stdin
@@ -70,6 +72,7 @@ jobs:
       
       - name: Clean
         run: |
+          LOCAL_IMAGE="${LOCAL_NAME}:${LOCAL_SHA}"
           docker images --format '{{.Repository}}:{{.Tag}}' "${LOCAL_IMAGE}"
           docker images --format '{{.Repository}}:{{.Tag}}'
           docker rmi --force "${LOCAL_IMAGE}"

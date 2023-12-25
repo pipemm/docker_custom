@@ -14,12 +14,8 @@ name: Re-tag Image
         default: 'test'
 
 env:
-  BRANCH          : "${GITHUB_REF##*/}"
-  REPOSITORY_NAME : "${BRANCH}"
-  TAG_FROM        :  ${{ github.event.inputs.tag_from }}
-  IMAGE_FROM      : "${NAMESPACE}/${REPOSITORY_NAME}:${TAG_FROM}"
-  TAG_TO          :  ${{ github.event.inputs.tag_to }}
-  IMAGE_TO        : "${NAMESPACE}/${REPOSITORY_NAME}:${TAG_TO}"
+  TAG_FROM :  ${{ github.event.inputs.tag_from }}
+  TAG_TO   :  ${{ github.event.inputs.tag_to }}
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -35,11 +31,14 @@ jobs:
       - name: Pull and Test
         env:
           FOLDER_TEST : 'Test/'
-          LOCAL_IMAGE : "${IMAGE_FROM}"
         run: |
+          BRANCH="${GITHUB_REF##*/}"
+          REPOSITORY_NAME="${BRANCH}"
+          IMAGE_FROM="${NAMESPACE}/${REPOSITORY_NAME}:${TAG_FROM}"
           docker pull "${IMAGE_FROM}"
           if [ -d "${FOLDER_TEST}" ]
           then
+            export TEST_IMAGE="${IMAGE_FROM}"
             ls ${FOLDER_TEST%/}/*.sh |
               while read -r bfile
               do
@@ -50,6 +49,10 @@ jobs:
       
       - name: Tag
         run: |
+          BRANCH="${GITHUB_REF##*/}"
+          REPOSITORY_NAME="${BRANCH}"
+          IMAGE_FROM="${NAMESPACE}/${REPOSITORY_NAME}:${TAG_FROM}"
+          IMAGE_TO="${NAMESPACE}/${REPOSITORY_NAME}:${TAG_TO}"
           docker tag "${IMAGE_FROM}" ${IMAGE_TO}
 
       - name: Push
@@ -57,7 +60,9 @@ jobs:
           NAMESPACE: ${{ secrets.DOCKER_NAMESPACE }}
           PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
         run: |
+          BRANCH="${GITHUB_REF##*/}"
+          REPOSITORY_NAME="${BRANCH}"
+          IMAGE_TO="${NAMESPACE}/${REPOSITORY_NAME}:${TAG_TO}"
           USERNAME="${NAMESPACE##*/}"
           echo "${PASSWORD}" | docker login --username "${USERNAME}" --password-stdin
-          docker push "${IMAGE_NAME}"
-          
+          docker push "${IMAGE_TO}"
