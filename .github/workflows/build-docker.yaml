@@ -18,8 +18,10 @@ on:
         default: 'latest'
 
 env:
-  LOCAL_NAME  : 'local-image'
-  LOCAL_SHA   : "${{ github.sha }}"
+  ##LOCAL_NAME  : 'local-image'
+  ##LOCAL_SHA   : "${{ github.sha }}"
+  LOCAL_IMAGE : "local-image:${{ github.sha }}"
+  NAMESPACE   : "${{ secrets.DOCKER_NAMESPACE }}"
   TAG_NAME    : "${{ github.event.inputs.tag_name || 'latest' }}"
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
@@ -37,7 +39,7 @@ jobs:
       - name: Build Docker Image
         run: |
           ### Define Variables
-          LOCAL_IMAGE="${LOCAL_NAME}:${LOCAL_SHA}"
+          ## LOCAL_IMAGE="${LOCAL_NAME}:${LOCAL_SHA}"
           ###
           docker build --no-cache --tag "${LOCAL_IMAGE}" --file 'Dockerfile' .
       
@@ -46,7 +48,7 @@ jobs:
           FOLDER_TEST: 'Test/'
         run: |
           ### Define Variables
-          LOCAL_IMAGE="${LOCAL_NAME}:${LOCAL_SHA}"
+          ##LOCAL_IMAGE="${LOCAL_NAME}:${LOCAL_SHA}"
           ###
           if [ -d "${FOLDER_TEST}" ]
           then
@@ -61,11 +63,10 @@ jobs:
       
       - name: Publish
         env:
-          NAMESPACE: ${{ secrets.DOCKER_NAMESPACE }}
           PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
         run: |
           ### Define Variables
-          LOCAL_IMAGE="${LOCAL_NAME}:${LOCAL_SHA}"
+          ##LOCAL_IMAGE="${LOCAL_NAME}:${LOCAL_SHA}"
           BRANCH="${GITHUB_REF##*/}"
           REPOSITORY_NAME="${BRANCH}"
           IMAGE_NAME="${NAMESPACE}/${REPOSITORY_NAME}:${TAG_NAME}"
@@ -77,11 +78,9 @@ jobs:
           docker logout
       
       - name: Clean
-        env:
-          NAMESPACE: ${{ secrets.DOCKER_NAMESPACE }}
         run: |
           ### Define Variables
-          LOCAL_IMAGE="${LOCAL_NAME}:${LOCAL_SHA}"
+          ##LOCAL_IMAGE="${LOCAL_NAME}:${LOCAL_SHA}"
           BRANCH="${GITHUB_REF##*/}"
           REPOSITORY_NAME="${BRANCH}"
           IMAGE_NAME="${NAMESPACE}/${REPOSITORY_NAME}:${TAG_NAME}"
