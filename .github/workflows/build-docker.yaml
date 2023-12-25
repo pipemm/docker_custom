@@ -18,11 +18,11 @@ on:
         default: 'latest'
 
 env:
-  ##LOCAL_NAME  : 'local-image'
-  ##LOCAL_SHA   : "${{ github.sha }}"
   LOCAL_IMAGE : "local-image:${{ github.sha }}"
-  NAMESPACE   : "${{ secrets.DOCKER_NAMESPACE }}"
-  TAG_NAME    : "${{ github.event.inputs.tag_name || 'latest' }}"
+  NAMESPACE       : "${{ secrets.DOCKER_NAMESPACE }}"
+  REPOSITORY_NAME : "${{ github.ref_name }}"
+    ## the branch name (`github.ref_name`) of the github repository is the repository name in the container registry
+  TAG_NAME        : "${{ github.event.inputs.tag_name || 'latest' }}"
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -38,18 +38,12 @@ jobs:
         
       - name: Build Docker Image
         run: |
-          ### Define Variables
-          ## LOCAL_IMAGE="${LOCAL_NAME}:${LOCAL_SHA}"
-          ###
           docker build --no-cache --tag "${LOCAL_IMAGE}" --file 'Dockerfile' .
       
       - name: Test
         env:
           FOLDER_TEST: 'Test/'
         run: |
-          ### Define Variables
-          ##LOCAL_IMAGE="${LOCAL_NAME}:${LOCAL_SHA}"
-          ###
           if [ -d "${FOLDER_TEST}" ]
           then
             export TEST_IMAGE="${LOCAL_IMAGE}"
@@ -66,9 +60,6 @@ jobs:
           PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
         run: |
           ### Define Variables
-          ##LOCAL_IMAGE="${LOCAL_NAME}:${LOCAL_SHA}"
-          BRANCH="${GITHUB_REF##*/}"
-          REPOSITORY_NAME="${BRANCH}"
           IMAGE_NAME="${NAMESPACE}/${REPOSITORY_NAME}:${TAG_NAME}"
           ###
           docker tag "${LOCAL_IMAGE}" ${IMAGE_NAME}
@@ -80,11 +71,7 @@ jobs:
       - name: Clean
         run: |
           ### Define Variables
-          ##LOCAL_IMAGE="${LOCAL_NAME}:${LOCAL_SHA}"
-          BRANCH="${GITHUB_REF##*/}"
-          REPOSITORY_NAME="${BRANCH}"
           IMAGE_NAME="${NAMESPACE}/${REPOSITORY_NAME}:${TAG_NAME}"
           ###
           docker rmi --force "${LOCAL_IMAGE}"
           docker rmi --force "${IMAGE_NAME}"
-          echo "${{ github.ref_name }}"
