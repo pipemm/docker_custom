@@ -73,6 +73,8 @@ jobs:
           docker logout
       
       - name: Clean
+        env:
+          NAMESPACE: ${{ secrets.DOCKER_NAMESPACE }}
         run: |
           LOCAL_IMAGE="${LOCAL_NAME}:${LOCAL_SHA}"
           BRANCH="${GITHUB_REF##*/}"
