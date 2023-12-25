@@ -19,13 +19,13 @@ on:
 
 env:
   LOCAL_NAME  : 'local-image'
-  LOCAL_SHA   :  ${{ github.sha }}
-  LOCAL_IMAGE : "${LOCAL_NAME}:${LOCAL_SHA}"
+  LOCAL_SHA   : ${{ github.sha }}
+  LOCAL_IMAGE : ${LOCAL_NAME}:${LOCAL_SHA}
   #####
-  TAG_NAME        :  ${{ github.event.inputs.tag_name || 'latest' }}
-  BRANCH          : "${GITHUB_REF##*/}"
-  REPOSITORY_NAME : "${BRANCH}"
-  IMAGE_NAME      : "${NAMESPACE}/${REPOSITORY_NAME}:${TAG_NAME}"
+  TAG_NAME        : ${{ github.event.inputs.tag_name || 'latest' }}
+  BRANCH          : ${GITHUB_REF##*/}
+  REPOSITORY_NAME : ${BRANCH}
+  IMAGE_NAME      : ${NAMESPACE}/${REPOSITORY_NAME}:${TAG_NAME}
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
