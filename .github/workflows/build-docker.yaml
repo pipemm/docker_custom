@@ -32,6 +32,14 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
+      - name: Check Branch
+        run: |
+          if [ "${{ github.ref_name }}" = 'main' ]
+          then
+            echo "Error: Should not run this workflow on the main branch."
+            exit 1
+          fi
+
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: Checkout
         uses: actions/checkout@v4
