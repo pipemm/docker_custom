@@ -75,7 +75,6 @@ jobs:
       - name: Clean
         run: |
           LOCAL_IMAGE="${LOCAL_NAME}:${LOCAL_SHA}"
-          LOCAL_IMAGE="${LOCAL_NAME}:${LOCAL_SHA}"
           BRANCH="${GITHUB_REF##*/}"
           REPOSITORY_NAME="${BRANCH}"
           IMAGE_NAME="${NAMESPACE}/${REPOSITORY_NAME}:${TAG_NAME}"
