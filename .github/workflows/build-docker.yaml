@@ -11,6 +11,8 @@ on:
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
+    branches-ignore:
+      - main
     inputs:
       tag_name:
         description: 'Tag Name'
@@ -73,6 +75,9 @@ jobs:
       - name: Clean
         run: |
           LOCAL_IMAGE="${LOCAL_NAME}:${LOCAL_SHA}"
-          docker images --format '{{.Repository}}:{{.Tag}}' "${LOCAL_IMAGE}"
-          docker images --format '{{.Repository}}:{{.Tag}}'
+          LOCAL_IMAGE="${LOCAL_NAME}:${LOCAL_SHA}"
+          BRANCH="${GITHUB_REF##*/}"
+          REPOSITORY_NAME="${BRANCH}"
+          IMAGE_NAME="${NAMESPACE}/${REPOSITORY_NAME}:${TAG_NAME}"
           docker rmi --force "${LOCAL_IMAGE}"
+          docker rmi "${IMAGE_NAME}"
