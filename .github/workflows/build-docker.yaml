@@ -20,7 +20,6 @@ on:
 env:
   LOCAL_NAME  : 'local-image'
   LOCAL_SHA   : "${{ github.sha }}"
-  LOCAL_IMAGE : "${{ env.LOCAL_NAME }}:${{ env.LOCAL_SHA }}"
   TAG_NAME    : "${{ github.event.inputs.tag_name || 'latest' }}"
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
@@ -37,14 +36,18 @@ jobs:
         
       - name: Build Docker Image
         run: |
-          ## LOCAL_IMAGE="${LOCAL_NAME}:${LOCAL_SHA}"
+          ### Define Variables
+          LOCAL_IMAGE="${LOCAL_NAME}:${LOCAL_SHA}"
+          ###
           docker build --no-cache --tag "${LOCAL_IMAGE}" --file 'Dockerfile' .
       
       - name: Test
         env:
           FOLDER_TEST: 'Test/'
         run: |
-          ## LOCAL_IMAGE="${LOCAL_NAME}:${LOCAL_SHA}"
+          ### Define Variables
+          LOCAL_IMAGE="${LOCAL_NAME}:${LOCAL_SHA}"
+          ###
           if [ -d "${FOLDER_TEST}" ]
           then
             export TEST_IMAGE="${LOCAL_IMAGE}"
@@ -61,10 +64,12 @@ jobs:
           NAMESPACE: ${{ secrets.DOCKER_NAMESPACE }}
           PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
         run: |
-          ## LOCAL_IMAGE="${LOCAL_NAME}:${LOCAL_SHA}"
+          ### Define Variables
+          LOCAL_IMAGE="${LOCAL_NAME}:${LOCAL_SHA}"
           BRANCH="${GITHUB_REF##*/}"
           REPOSITORY_NAME="${BRANCH}"
           IMAGE_NAME="${NAMESPACE}/${REPOSITORY_NAME}:${TAG_NAME}"
+          ###
           docker tag "${LOCAL_IMAGE}" ${IMAGE_NAME}
           USERNAME="${NAMESPACE##*/}"
           echo "${PASSWORD}" | docker login --username "${USERNAME}" --password-stdin
@@ -75,10 +80,12 @@ jobs:
         env:
           NAMESPACE: ${{ secrets.DOCKER_NAMESPACE }}
         run: |
-          ## LOCAL_IMAGE="${LOCAL_NAME}:${LOCAL_SHA}"
+          ### Define Variables
+          LOCAL_IMAGE="${LOCAL_NAME}:${LOCAL_SHA}"
           BRANCH="${GITHUB_REF##*/}"
           REPOSITORY_NAME="${BRANCH}"
           IMAGE_NAME="${NAMESPACE}/${REPOSITORY_NAME}:${TAG_NAME}"
+          ###
           docker rmi --force "${LOCAL_IMAGE}"
           docker rmi --force "${IMAGE_NAME}"
-          echo "${{ github.ref }}"
+          echo "${{ github.ref_name }}"
