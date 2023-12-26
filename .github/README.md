@@ -5,3 +5,7 @@
 
 [actions/checkout](https://github.com/actions/checkout)
 
+## Environments
+
+[Environment Secrets](https://docs.github.com/en/actions/deployment/targeting-different-environments/using-environments-for-deployment#environment-secrets "Using environments for deployment")
+
