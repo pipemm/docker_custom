@@ -64,6 +64,7 @@ jobs:
               fi
               DATA_JSON=`jq --arg 'b' "${branch}" --null-input --compact-output '{"ref":$b}'`
               echo "${ACTION_TOKEN}"
+              echo "${DATA_JSON}"
               curl --location \
                 --request POST \
                 --header "Accept: application/vnd.github+json" \
@@ -103,10 +104,11 @@ jobs:
               DATA_JSON=`jq --arg 'b' "${branch}" --null-input --compact-output '{"ref":$b}'`
               echo "${ACTION_TOKEN}"
               echo "${DATA_JSON}"
+              echo "${API_DISPATCH}"
               curl --location \
                 --request POST \
                 --header "Accept: application/vnd.github+json" \
-                --header "Authorization: token ${ACTION_TOKEN}" \
+                --header "Authorization: Bearer ${ACTION_TOKEN}" \
                 --header "X-GitHub-Api-Version: 2022-11-28" \
                 "${API_DISPATCH}" \
                 --data "${DATA_JSON}"
