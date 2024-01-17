@@ -97,7 +97,7 @@ jobs:
                 continue
               fi
               echo "${branch}"
-              DATA_JSON=`jq --arg b "${branch}" --compact-output '{"ref":"$b"}'`
+              DATA_JSON=`jq --arg b "${branch}" --compact-output '{"ref":$b}'`
               echo "${DATA_JSON}"
               curl --location \
                 --request POST \
