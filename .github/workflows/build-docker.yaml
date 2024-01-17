@@ -35,8 +35,7 @@ env:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   caller:
-    ## if: ${{ github.ref_name == 'main' && github.event_name == 'schedule' }}
-    if: ${{ github.ref_name == 'main' }}
+    if: ${{ github.ref_name == 'main' && github.event_name == 'schedule' }}
     runs-on: ubuntu-22.04
 
     steps:
