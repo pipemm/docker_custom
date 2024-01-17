@@ -97,14 +97,14 @@ jobs:
                 continue
               fi
               echo "${branch}"
-              DATA_JSON=`jq --arg 'b' "${branch}"" --null-input --compact-output '{"ref":$b}'`
+              DATA_JSON=`jq --arg 'b' "${branch}" --null-input --compact-output '{"ref":$b}'`
               echo "${DATA_JSON}"
               curl --location \
                 --request POST \
                 --header "Accept: application/vnd.github+json" \
                 --header "X-GitHub-Api-Version: 2022-11-28" \
                 "${API_DISPATCH}" \
-                --data '{"ref":"topic-branch"}'
+                --data "${DATA_JSON}"
             done
 
   process:
