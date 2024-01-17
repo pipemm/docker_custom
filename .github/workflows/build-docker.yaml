@@ -57,13 +57,14 @@ jobs:
             jq --raw-output '.[].name'
 
   test:
-    if: ${{ github.ref_name = 'main' }}
+    if: ${{ github.ref_name == 'main' }}
     runs-on: ubuntu-22.04
     steps:
       - name: Trigger Other Branches
         env:
           OWNER_REPO: ${{ github.repository }}
           WORKFLOW_ID: ${{ github.run_id }}
+          BRANCH_THIS: ${{ github.ref_name }}
         run: |
           API_DISPATCH="https://api.github.com/repos/${OWNER_REPO}/actions/workflows/${WORKFLOW_ID}/dispatches"
           echo "${API_DISPATCH}"
