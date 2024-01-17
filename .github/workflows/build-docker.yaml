@@ -18,7 +18,7 @@ on:
         default: 'latest'
 
   schedule:
-    - cron: '0    12   1    *    *'
+    - cron: '0    12   1/3  *    *'
 ##           │    │    │    │    └─ day of the week  (0 -  6 or SUN-SAT)
 ##           │    │    │    └────── month            (1 - 12 or JAN-DEC)
 ##           │    │    └─────────── day of the month (1 - 31)
@@ -44,7 +44,17 @@ jobs:
           OWNER_REPO: ${{ github.repository }}
           WORKFLOW_ID: ${{ github.run_id }}
         run: |
-          echo 'https://api.github.com/repos/${OWNER_REPO}/actions/workflows/${WORKFLOW_ID}/dispatches'
+          API_DISPATCH="https://api.github.com/repos/${OWNER_REPO}/actions/workflows/${WORKFLOW_ID}/dispatches"
+          echo "${API_DISPATCH}"
+          ## https://docs.github.com/en/rest/actions/workflows?apiVersion=2022-11-28#create-a-workflow-dispatch-event
+          ## [Use the REST API to get branches](https://docs.github.com/en/rest/branches/branches)
+          API_BRANCH="https://api.github.com/repos/${GITHUB_REPOSITORY}/branches"
+          echo "${API_BRANCH}"
+          curl --location \
+            --header 'Accept: application/vnd.github+json' \
+            --header 'X-GitHub-Api-Version: 2022-11-28' \
+            "${API_BRANCH}" |\
+            jq --raw-output '.[].name'
     
   process:
     if: ${{ github.ref_name != 'main' }}
