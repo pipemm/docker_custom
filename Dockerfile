@@ -16,5 +16,6 @@ FROM scratch
 LABEL maintainer='244682510@qq.com'
 
 COPY --from=al2023 / /
+RUN python3 -m ensurepip
 
 CMD ['/bin/bash']
