@@ -2,7 +2,7 @@ FROM public.ecr.aws/amazonlinux/amazonlinux:2023 as installer
 ARG URL_ZIP='https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip'
 ARG EXE_FILENAME='awscli.zip'
 RUN yum install --assumeyes unzip \
-  && curl "${URL_ZIP}" -o "${EXE_FILENAME}"
+  && curl "${URL_ZIP}" --output "${EXE_FILENAME}" \
   && unzip "${EXE_FILENAME}" \
   && ./aws/install --bin-dir /aws-cli-bin/
 
