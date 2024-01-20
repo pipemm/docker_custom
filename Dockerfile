@@ -17,6 +17,6 @@ LABEL maintainer='244682510@qq.com'
 
 COPY --from=al2023 / /
 RUN python3 -m ensurepip \
-  && python3 -m pip uninstall pip
+  && python3 -m pip uninstall --yes pip
 
 CMD ['/bin/bash']
