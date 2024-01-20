@@ -1,6 +1,4 @@
 FROM public.ecr.aws/amazonlinux/amazonlinux:2023 as installer
-ARG EXE_FILENAME=awscli-exe-linux-x86_64.zip
-COPY $EXE_FILENAME .
 RUN URL_ZIP='https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip' \
   && EXE_FILENAME='awscli.zip' \
   && curl "${URL_ZIP}" -o "${EXE_FILENAME}" \
