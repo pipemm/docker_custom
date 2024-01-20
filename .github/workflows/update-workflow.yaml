@@ -21,13 +21,11 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          ##token: ${{ secrets.GH_DOCKER_MAKER }}
 
       - name: Merge Main to Other Branches
         run: |
           git config --local user.name 'Github Action'
           git config --local user.email '244682510@qq.com'
-          FILE_BRANCH='branch.txt'
           URL_API="https://api.github.com/repos/${GITHUB_REPOSITORY}/branches"
           ## [Use the REST API to get branches](https://docs.github.com/en/rest/branches/branches)
           curl --location \
