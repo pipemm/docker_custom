@@ -37,6 +37,7 @@ jobs:
         uses: actions/checkout@v4
       
       - name: Pull and Test
+        shell: bash
         env:
           FOLDER_TEST : 'Test/'
         run: |
@@ -56,6 +57,7 @@ jobs:
           fi
       
       - name: Tag
+        shell: bash
         run: |
           ### Define Variables
           IMAGE_FROM="${NAMESPACE}/${REPOSITORY_NAME}:${TAG_FROM}"
@@ -64,6 +66,7 @@ jobs:
           docker tag "${IMAGE_FROM}" ${IMAGE_TO}
 
       - name: Push
+        shell: bash
         env:
           PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
         run: |
@@ -76,6 +79,7 @@ jobs:
           docker logout
 
       - name: Clean
+        shell: bash
         run: |
           ### Define Variables
           IMAGE_FROM="${NAMESPACE}/${REPOSITORY_NAME}:${TAG_FROM}"
