@@ -123,7 +123,7 @@ jobs:
           ### Define Variables
           IMAGE_NAME="${NAMESPACE}/${REPOSITORY_NAME}:${TAG_NAME}"
           ###
-          docker tag "${LOCAL_IMAGE}" ${IMAGE_NAME}
+          docker tag "${LOCAL_IMAGE}" "${IMAGE_NAME}"
           USERNAME="${NAMESPACE##*/}"
           echo "${PASSWORD}" | docker login --username "${USERNAME}" --password-stdin
           docker push "${IMAGE_NAME}"
