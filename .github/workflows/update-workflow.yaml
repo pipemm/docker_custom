@@ -23,6 +23,7 @@ jobs:
           fetch-depth: 0
 
       - name: Merge Main to Other Branches
+        shell: bash
         run: |
           git config --local user.name 'Github Action'
           git config --local user.email '244682510@qq.com'
