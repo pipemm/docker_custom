@@ -35,7 +35,8 @@ env:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   caller:
-    if: ${{ github.ref_name == 'main' && github.event_name == 'schedule' }}
+    ##if: ${{ github.ref_name == 'main' && github.event_name == 'schedule' }}
+    if: ${{ github.ref_name == 'main' }}
     runs-on: ubuntu-22.04
 
     steps:
@@ -49,13 +50,17 @@ jobs:
         run: |
           ## [Create a workflow dispatch event](https://docs.github.com/en/rest/actions/workflows?apiVersion=2022-11-28#create-a-workflow-dispatch-event)
           API_RUN="https://api.github.com/repos/${OWNER_REPO}/actions/runs/${RUN_ID}"
-          WORKFLOW_ID=`curl --location \
-            --header 'Accept: application/vnd.github+json' \
-            --header 'X-GitHub-Api-Version: 2022-11-28' \
-            "${API_RUN}" |\
-            jq --raw-output '.workflow_id'`
+          WORKFLOW_ID=$(
+            curl --location \
+              --header 'Accept: application/vnd.github+json' \
+              --header 'X-GitHub-Api-Version: 2022-11-28' \
+              "${API_RUN}" |\
+              jq --raw-output '.workflow_id'
+            )
           WORKFLOW_FILE="${WORKFLOW_REF%@*}"
           WORKFLOW_FILE="${WORKFLOW_FILE##*/}" ## interchangeable with WORKFLOW_ID
+          echo "WORKFLOW_ID=${WORKFLOW_ID}"
+          echo "WORKFLOW_FILE=${WORKFLOW_FILE}"
           API_DISPATCH="https://api.github.com/repos/${OWNER_REPO}/actions/workflows/${WORKFLOW_ID}/dispatches"
           ## https://docs.github.com/en/rest/actions/workflows?apiVersion=2022-11-28#create-a-workflow-dispatch-event
           ## [Use the REST API to get branches](https://docs.github.com/en/rest/branches/branches)
