@@ -43,10 +43,11 @@ jobs:
       - name: Trigger Other Branches
         shell: bash
         env:
-          OWNER_REPO: ${{ github.repository }}
-          RUN_ID: ${{ github.run_id }}
-          BRANCH_THIS: ${{ github.ref_name }}
-          ACTION_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          OWNER_REPO   : ${{ github.repository }}
+          RUN_ID       : ${{ github.run_id }}
+          BRANCH_THIS  : ${{ github.ref_name }}
+          WORKFLOW_REF : ${{ github.workflow_ref }}
+          ACTION_TOKEN : ${{ secrets.GITHUB_TOKEN }}
         run: |
           ## [Create a workflow dispatch event](https://docs.github.com/en/rest/actions/workflows?apiVersion=2022-11-28#create-a-workflow-dispatch-event)
           API_RUN="https://api.github.com/repos/${OWNER_REPO}/actions/runs/${RUN_ID}"
