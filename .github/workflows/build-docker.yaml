@@ -35,8 +35,7 @@ env:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   caller:
-    ##if: ${{ github.ref_name == 'main' && github.event_name == 'schedule' }}
-    if: ${{ github.ref_name == 'main' }}
+    if: ${{ github.ref_name == 'main' && github.event_name == 'schedule' }}
     runs-on: ubuntu-22.04
 
     steps:
@@ -60,8 +59,6 @@ jobs:
             )
           WORKFLOW_FILE="${WORKFLOW_REF%@*}"
           WORKFLOW_FILE="${WORKFLOW_FILE##*/}" ## interchangeable with WORKFLOW_ID
-          echo "WORKFLOW_ID=${WORKFLOW_ID}"
-          echo "WORKFLOW_FILE=${WORKFLOW_FILE}"
           API_DISPATCH="https://api.github.com/repos/${OWNER_REPO}/actions/workflows/${WORKFLOW_ID}/dispatches"
           ## https://docs.github.com/en/rest/actions/workflows?apiVersion=2022-11-28#create-a-workflow-dispatch-event
           ## [Use the REST API to get branches](https://docs.github.com/en/rest/branches/branches)
